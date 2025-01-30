@@ -35,11 +35,11 @@ func (s *UserService) Createuser(ctx context.Context, spec CreateUserSpec) (*Use
     if err = s.writeUser(ctx, newUser); err != nil {
         return nil , err
     }
-    
+
     return newUser, nil
 }
 
-func NewUserService(ctx context.Context, db *sqlx.DB) *UserService{
+func NewUserService(ctx context.Context, db *sqlx.DB) *UserService {
     return &UserService{
         UserDBAccessor: newPostgresUserAccessor(db),
     }

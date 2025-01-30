@@ -2,16 +2,35 @@ package main
 
 import (
 	"ayo/cmd/config"
-	"ayo/internal/common/database"
+	"ayo/cmd/dependency"
+	"ayo/internal/user"
+	"ayo/router"
+	"context"
 	"fmt"
 
+	"github.com/gin-contrib/cors"
+
+	"github.com/gin-gonic/gin"
 	_ "github.com/lib/pq"
 )
 
 func main() {
-	// Connecting to postgresql db
-	database.NewDBConnection()
-
 	localConfig := config.Load()
-	fmt.Printf("This is the result: %v", localConfig.Common.Postgres.User)
+	
+	db := dependency.NewPostgreSQL(localConfig.Common.Postgres)
+	ctx := context.Background()
+
+	// Initialize adapters
+	userSvc := user.NewUserService(ctx, db)
+
+	// Initialize ports
+	routerEngine := gin.Default()
+	routerEngine.Use(cors.Default())
+
+	router.NewUserEngine(routerEngine, &localConfig.Routes.Vendor, *userSvc)
+
+	if err := routerEngine.Run(":8080"); err != nil {
+		fmt.Printf("failed to run server %v", err)
+	}
+	fmt.Println("Application starts listering")
 }

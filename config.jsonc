@@ -7,5 +7,10 @@
             "port": "5432",
             "name": "ayo"
         }
+    },
+    "routes": {
+        "user": {
+            "create": "/sign-up"
+        }
     }
 }

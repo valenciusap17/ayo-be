@@ -8,10 +8,19 @@ import (
 
 type Application struct {
 	Common Common `mapstructure:"common" validate:"required"`
+	Routes Routes `mapstructure:"routes" validate:"required"`
 }
 
 type Common struct {
 	Postgres Postgres `mapstructure:"postgres" validate:"required"`
+}
+
+type Routes struct {
+	Vendor VendorRoutes `mapstructure:"vendor" validate:"required"`
+}
+
+type VendorRoutes struct {
+	SignIn string `mapstructure:"sign-in" validate:"required"`
 }
 
 type Postgres struct {
