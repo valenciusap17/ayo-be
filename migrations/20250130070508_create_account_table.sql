@@ -1,6 +1,6 @@
 -- +goose Up
 -- +goose StatementBegin
-CREATE TABLE "user" 
+CREATE TABLE "account" 
 (
     "id" varchar(63) PRIMARY KEY,
     "email" varchar(255) NOT NULL,

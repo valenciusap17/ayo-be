@@ -3,7 +3,7 @@ package main
 import (
 	"ayo/cmd/config"
 	"ayo/cmd/dependency"
-	"ayo/internal/user"
+	"ayo/internal/account"
 	"ayo/router"
 	"context"
 	"fmt"
@@ -21,13 +21,13 @@ func main() {
 	ctx := context.Background()
 
 	// Initialize adapters
-	userSvc := user.NewUserService(ctx, db)
+	userSvc := account.NewAccountService(ctx, db)
 
 	// Initialize ports
 	routerEngine := gin.Default()
 	routerEngine.Use(cors.Default())
 
-	router.NewUserEngine(routerEngine, &localConfig.Routes.Vendor, *userSvc)
+	router.NewUserEngine(routerEngine, &localConfig.Routes.User, *userSvc)
 
 	if err := routerEngine.Run(":8080"); err != nil {
 		fmt.Printf("failed to run server %v", err)

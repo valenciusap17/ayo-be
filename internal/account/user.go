@@ -1,8 +1,8 @@
-package user
+package account
 
 import "time"
 
-type User struct {
+type Account struct {
 	ID            string    `db:"id" json:"id"`
 	Email         string    `db:"email" json:"email"`
 	Password      string    `db:"password" json:"password"`

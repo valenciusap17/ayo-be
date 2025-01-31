@@ -10,7 +10,8 @@
     },
     "routes": {
         "user": {
-            "create": "/sign-up"
+            "sign-up": "/user/sign-up",
+            "sign-in": "/user/sign-in"
         }
     }
 }

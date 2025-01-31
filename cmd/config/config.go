@@ -16,10 +16,11 @@ type Common struct {
 }
 
 type Routes struct {
-	Vendor VendorRoutes `mapstructure:"vendor" validate:"required"`
+	User UserRoutes `mapstructure:"user" validate:"required"`
 }
 
-type VendorRoutes struct {
+type UserRoutes struct {
+	SignUp string `mapstructure:"sign-up" validate:"required"`
 	SignIn string `mapstructure:"sign-in" validate:"required"`
 }
 
