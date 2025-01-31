@@ -9,9 +9,12 @@
         }
     },
     "routes": {
-        "user": {
-            "sign-up": "/user/sign-up",
-            "sign-in": "/user/sign-in"
+        "account": {
+            "sign-up": "/account/sign-up",
+            "sign-in": "/account/sign-in"
         }
+    },
+    "token": {
+        "secret": "averysecretkey"
     }
 }

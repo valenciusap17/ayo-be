@@ -1,8 +1,11 @@
 package account
 
 import (
+	"ayo/cmd/config"
+	"ayo/internal/token"
 	"ayo/utils/errors"
 	"context"
+	"fmt"
 	"time"
 
 	"github.com/google/uuid"
@@ -18,6 +21,8 @@ type AccountDBAccessor interface {
 
 type AccountService struct {
     AccountDBAccessor
+    *token.TokenService
+    config *config.Application
 }
 
 func (s *AccountService) Register(ctx context.Context, spec AuthenticationSpec) (*Account, *errors.AppError) {
@@ -42,21 +47,30 @@ func (s *AccountService) Register(ctx context.Context, spec AuthenticationSpec) 
     return account, nil
 }
 
-func (s *AccountService) Login(ctx context.Context, spec AuthenticationSpec) *errors.AppError {
+func (s *AccountService) Login(ctx context.Context, spec AuthenticationSpec) (*string, *errors.AppError) {
     existingAccount, err := s.AccountDBAccessor.findAccountByEmail(ctx, spec.Email)
     if err != nil {
-        return errors.NotFoundError("Account not found")
+        return nil, errors.NotFoundError("Account not found")
     }
 
     if err = bcrypt.CompareHashAndPassword([]byte(existingAccount.Password), []byte(spec.Password)); err != nil {
-        return errors.UnauthorizedError("Incorrect password")
+        return nil, errors.UnauthorizedError("Incorrect password")
     }
 
-    return nil
+    
+    token, err := s.TokenService.GenerateToken(existingAccount.ID)
+    if err != nil {
+        fmt.Println(err.Error())
+        return nil, errors.InternalServerError("Token creation error")
+    }
+    
+    return token, nil
 }
 
-func NewAccountService(ctx context.Context, db *sqlx.DB) *AccountService {
+func NewAccountService(ctx context.Context, db *sqlx.DB, cfg *config.Application, tokenSvc *token.TokenService) *AccountService {
     return &AccountService{
         AccountDBAccessor: newPostgresAccountAccessor(db),
+        config: cfg,
+        TokenService: tokenSvc,
     }
 }

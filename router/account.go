@@ -8,12 +8,12 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func NewUserEngine(
+func NewAccountEngine(
     engine *gin.Engine, 
-    userRoutes *config.UserRoutes, 
+    accountRoutes *config.AccountRoutes, 
     accSvc account.AccountService,
 ) {
-    engine.POST(userRoutes.SignUp, func(c *gin.Context) {
+    engine.POST(accountRoutes.SignUp, func(c *gin.Context) {
         spec := account.AuthenticationSpec{}
         if err := c.ShouldBindJSON(&spec); err != nil {
             c.JSON(http.StatusBadRequest, gin.H{
@@ -36,7 +36,7 @@ func NewUserEngine(
         })
     })
 
-    engine.POST(userRoutes.SignIn, func(c *gin.Context) {
+    engine.POST(accountRoutes.SignIn, func(c *gin.Context) {
         spec := account.AuthenticationSpec{}
         if err := c.ShouldBindJSON(&spec); err != nil {
             c.JSON(http.StatusBadRequest, gin.H{
@@ -45,7 +45,7 @@ func NewUserEngine(
             return
         }
 
-        err := accSvc.Login(c, spec);
+        token, err := accSvc.Login(c, spec);
         if err != nil {
             c.JSON(err.Code, gin.H{
                 "error": err.Message,
@@ -54,6 +54,7 @@ func NewUserEngine(
         }
 
         c.JSON(http.StatusOK, gin.H{
+            "token": token,
             "message": "User sign in succeed",
         })
     })

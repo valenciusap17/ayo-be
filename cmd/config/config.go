@@ -9,6 +9,7 @@ import (
 type Application struct {
 	Common Common `mapstructure:"common" validate:"required"`
 	Routes Routes `mapstructure:"routes" validate:"required"`
+	Token Token `mapstructure:"token" validate:"required"`
 }
 
 type Common struct {
@@ -16,10 +17,14 @@ type Common struct {
 }
 
 type Routes struct {
-	User UserRoutes `mapstructure:"user" validate:"required"`
+	Account AccountRoutes `mapstructure:"account" validate:"required"`
 }
 
-type UserRoutes struct {
+type Token struct {
+	Secret string `mapstructure:"secret" validate:"required"`
+}
+
+type AccountRoutes struct {
 	SignUp string `mapstructure:"sign-up" validate:"required"`
 	SignIn string `mapstructure:"sign-in" validate:"required"`
 }
