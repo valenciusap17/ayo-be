@@ -1,9 +1,20 @@
 ## Getting started
-Install Go version 1.23.5 and run 
+Install Go version 1.23.5 and run:
 ```bash
 go mod tidy
 go mod vendor
 ```
+
+Download docker desktop and run the container:
+```bash
+make docker-up
+```
+
+Run the program:
+```bash
+make run
+```
+
 
 ## Add schema migrations
 
